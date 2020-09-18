@@ -4,21 +4,15 @@
 	<displayInCategory>AntiVirus</displayInCategory>
 	<description>This attribute returns the Virus Definitions Version for Sophos.  This attribute template applies to Sophos (v 7.1).</description>
 	<dataType>integer</dataType>
-	<scriptContentsMac>#!/bin/sh
-#Check if the version of Sophos is v10 or below for sweep binary location
+	<scriptContentsMac>#!/bin/bash
+#Check if sweep binary is installed
 sweep_binary=$(/usr/bin/which sweep)
-if [[ "sweep_binary" == "" ]] && [[ ! -e "/usr/bin/sweep" ]] && [[ -e "/usr/local/bin/sweep" ]]; then
-    sweep_binary="/usr/local/bin/sweep"
- elif [[ "sweep_binary" == "" ]] && [[ -e "/usr/local/bin/sweep" ]] && [[ -e "/usr/bin/sweep" ]]; then
-    sweep_binary="/usr/bin/sweep"
-fi
-    
-#Check to see if Sophos is installed
-if [[ "$sweep_binary" != "" ]]; then
-result=$(/usr/bin/sweep --version | grep "Virus data version" | awk '{print $5}')
-echo "&lt;result&gt;$result&lt;/result&gt;"
+# If sweep binary found, used to retrieve the Virus Data Version
+if [[ $sweep_binary != "" ]]; then
+result=$($sweep_binary --version | grep "Virus data version" | awk '{print $5}')
+echo "<result>$result</result>"
 else
-echo "&lt;result&gt;Not installed&lt;/result&gt;"
+echo "<result>Not installed</result>"
 fi
 	</scriptContentsMac>
 </extensionAttribute>
